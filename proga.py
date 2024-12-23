@@ -34,6 +34,19 @@ class ArrayMediator(Mediator):
             else:
                 print("Неверная операция.")
 
+class ArrayComponent:
+    def __init__(self, mediator: Mediator) -> None:
+        self._mediator = mediator
+
+    def input_arrays(self) -> None:
+        self._mediator.notify(self, "input_arrays")
+
+    def generate_arrays(self) -> None:
+        self._mediator.notify(self, "generate_arrays")
+
+    def perform_operation(self) -> None:
+        self._mediator.notify(self, "perform_operation")
+
 def input_large_number_array(prompt: str) -> list[int]:
     """Ввод массива чисел вручную."""
     return list(map(int, input(prompt).split()))
@@ -56,7 +69,7 @@ def subtract_arrays(array1: list[int], array2: list[int]) -> list[int]:
     array2 = [0] * (max_length - len(array2)) + array2
     return [a - b for a, b in zip(array1, array2)]
 
-def task1_menu(mediator: ArrayMediator) -> None:
+def task1_menu(component: ArrayComponent) -> None:
     """Меню первого задания."""
     while True:
         print("\nЗадание 1: Сумма и разность массивов")
@@ -68,11 +81,11 @@ def task1_menu(mediator: ArrayMediator) -> None:
         choice = input("Выберите опцию: ")
 
         if choice == '1':
-            mediator.notify(None, "input_arrays")
+            component.input_arrays()
         elif choice == '2':
-            mediator.notify(None, "generate_arrays")
+            component.generate_arrays()
         elif choice == '3':
-            mediator.notify(None, "perform_operation")
+            component.perform_operation()
         elif choice == '4':
             break
         else:
@@ -80,4 +93,5 @@ def task1_menu(mediator: ArrayMediator) -> None:
 
 if __name__ == "__main__":
     mediator = ArrayMediator()
-    task1_menu(mediator)
+    component = ArrayComponent(mediator)
+    task1_menu(component)
